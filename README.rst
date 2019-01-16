@@ -8,11 +8,7 @@ Example methods are:
 - Download logging
 - Download maximum waterdepth (non-temporal raster)
 - Download waterdepth (temporal raster, supply timestamp for snapshot) 
-- Find all scenarios by:
-
--- model slug
--- model repository
--- location
+- Find all scenarios model slug or scenario name
 
 
 Installation
