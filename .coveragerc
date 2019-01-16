@@ -1,0 +1,11 @@
+[run]
+source = threedi_scenario_downloader
+
+[report]
+show_missing = true
+
+[html]
+directory = htmlcov
+
+[xml]
+output = coverage.xml
