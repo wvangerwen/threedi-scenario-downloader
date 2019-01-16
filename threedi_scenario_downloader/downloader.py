@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """TODO Docstring, used in the command line help text."""
-import configparser
 import requests
 
 LIZARD_URL = "https://demo.lizard.net/api/v3/"
@@ -8,22 +7,14 @@ RESULT_LIMIT = 10
 REQUESTS_HEADERS = {}
 
 
+def get_headers():
+    return REQUESTS_HEADERS
+
+
 def set_headers(username, password):
     REQUESTS_HEADERS["username"] = username
     REQUESTS_HEADERS["password"] = password
     REQUESTS_HEADERS["Content-Type"] = "application/json"
-
-
-def get_headers(
-    config_path=r"C:\Users\emiel.verstegen\Documents\GitHub\threedi-scenario-downloader\threedi_scenario_downloader\tests\testdata\realconfig.ini"
-):
-    config = configparser.ConfigParser()
-    config.read(config_path)
-    return {
-        "username": "{}".format(config["credentials"]["username"]),
-        "password": "{}".format(config["credentials"]["password"]),
-        "Content-Type": "application/json",
-    }
 
 
 def find_scenarios_by_model_slug(model_uuid):
