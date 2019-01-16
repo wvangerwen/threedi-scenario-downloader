@@ -27,7 +27,7 @@ def find_scenarios_by_model_slug(model_uuid):
 
 
 def find_scenarios_by_name(name):
-    """Find all 3Di scenario's produced by the supplied model. User needs to be authorized to view the model results."""
+    """Find all 3Di scenario's matching the supplied name that the user is authorized for"""
     url = "{}scenarios/?name__icontains={}&limit={}".format(
         LIZARD_URL, name, RESULT_LIMIT
     )
@@ -47,7 +47,7 @@ def get_netcdf_link(scenario_uuid):
 
 
 def get_raster(scenario_uuid, raster_code):
-    """Returns the raster-uuid given the scenario-uuid and the requested raster type"""
+    """Returns the raster json object given the scenario-uuid and the requested raster type"""
     r = requests.get(
         url="{}scenarios/{}".format(LIZARD_URL, scenario_uuid), headers=get_headers()
     ).json()
@@ -61,6 +61,10 @@ def get_raster(scenario_uuid, raster_code):
 
 
 def create_raster_task(raster, target_srs, resolution, bounds=None, time=None):
+    """
+    Create a task on the Lizard server to prepare a raster with given SRS and resolution
+    Full extent will be used if the bounds are not supplied
+    """
     if bounds == None:
         bounds = raster["spatial_bounds"]
 
