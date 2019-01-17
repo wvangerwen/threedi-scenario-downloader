@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-"""TODO Docstring, used in the command line help text."""
+"""The downloader part of the threedi_scenario_downloader supplies the user with often used functionality to look up and export 3Di results using the Lizard API"""
 import requests
+from urllib.parse import urlparse
 
 LIZARD_URL = "https://demo.lizard.net/api/v3/"
 RESULT_LIMIT = 10
@@ -84,3 +85,44 @@ def create_raster_task(raster, target_srs, resolution, bounds=None, time=None):
     )
     r = requests.get(url=url, headers=get_headers()).json()
     return r
+
+
+# From here untested methods are added
+def get_task_status(task_uuid):
+    """Returns either SUCCES, PENDING or .......?"""
+    url = "{}tasks/{}/".format(LIZARD_URL, task_uuid)
+    r = requests.get(url=url, headers=get_headers()).json()
+    return r["task_status"]
+
+
+def get_task_download_url(task_uuid):
+    """In case the task is a succes, return the url to the file in order to download"""
+    if get_task_status(task_uuid) == "SUCCESS":
+        url = "{}tasks/{}/".format(LIZARD_URL, task_uuid)
+        r = requests.get(url=url, headers=get_headers()).json()
+        return r["result_url"]
+    # What to do if task is not a success?
+
+
+def download_file(url, path):
+    """
+    Download a file (url) to the specified path
+    Example: download_file(http://whatever.com/file.txt,os.path.normpath('somefolder/somefile.txt')) 
+    """
+    req = requests.get(url)
+    file = open(path, "wb")
+    for chunk in req.iter_content(100000):
+        file.write(chunk)
+    file.close()
+
+
+def download_task(task_uuid, pathname=None):
+    """
+    Seaches for url belonging to task_uuid and downloads this file to the specified filelocation and name.
+    If no pathname is supplied the url path will be used as a relative path to store the data.
+    """
+    if get_task_status(task_uuid) == "SUCCESS":
+        download_url = get_task_download_url(task_uuid)
+        if pathname == None:
+            pathname = urlparse(download_url).path
+        download_file(download_url, pathname)

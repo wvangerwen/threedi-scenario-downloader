@@ -9,7 +9,8 @@ verify_ssl = true
 "coveralls" = "*"
 
 [packages]
-"threedi-scenario-downloader" = {path = ".", editable = true, extras=["test"]}
+threedi-scenario-downloader = {path = ".",editable = true,extras = ["test"]}
+urlparse = "*"
 
 [requires]
 python_version = "3"
