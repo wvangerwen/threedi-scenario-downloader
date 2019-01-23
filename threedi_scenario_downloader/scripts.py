@@ -2,7 +2,8 @@
 """TODO Docstring, used in the command line help text."""
 import argparse
 import logging
-import sys
+
+# import sys
 
 logger = logging.getLogger(__name__)
 
