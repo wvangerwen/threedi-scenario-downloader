@@ -9,7 +9,7 @@ verify_ssl = true
 "coveralls" = "*"
 
 [packages]
-"threedi-scenario-downloader" = {path = ".", editable = true, extras=["test"]}
+threedi-scenario-downloader = {path = ".",editable = true,extras = ["test"]}
 
 [requires]
 python_version = "3"
