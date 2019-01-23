@@ -10,7 +10,6 @@ verify_ssl = true
 
 [packages]
 threedi-scenario-downloader = {path = ".",editable = true,extras = ["test"]}
-urlparse = "*"
 
 [requires]
 python_version = "3"
