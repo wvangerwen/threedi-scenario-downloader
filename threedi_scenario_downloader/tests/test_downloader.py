@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
-"""Tests for script.py"""
+"""Tests for downloader.py"""
 from threedi_scenario_downloader import downloader
 import configparser
-
-# import sys
-# import os
+import pytest
+from requests.exceptions import HTTPError
 
 
 def test_set_headers():
     config = configparser.ConfigParser()
-    config.read("threedi_scenario_downloader/tests/testdata/config.ini")
+    config.read("threedi_scenario_downloader/tests/testdata/realconfig.ini")
     downloader.set_headers(
         config["credentials"]["username"], config["credentials"]["password"]
     )
@@ -18,7 +17,7 @@ def test_set_headers():
 def test_get_headers():
     headers = downloader.get_headers()
     config = configparser.ConfigParser()
-    config.read("threedi_scenario_downloader/tests/testdata/config.ini")
+    config.read("threedi_scenario_downloader/tests/testdata/realconfig.ini")
 
     assert headers["username"] == config["credentials"]["username"]
     assert headers["password"] == config["credentials"]["password"]
@@ -48,10 +47,18 @@ def test_get_raster():
     assert raster["uuid"] == "4ef95627-e370-4eba-a5bc-bed661a3101a"
 
 
-# def test_create_raster_task():
-#     task = downloader.create_raster_task(
-#         downloader.get_raster("06c38953-31ec-4f6d-ae1f-ccdf31a348ae", "depth-max-dtri"),
-#         "EPSG:28992",
-#         "100",
-#     )
-#     print(task)
+def test_get_raster_from_non_existing_scenario():
+    with pytest.raises(HTTPError):
+        raster = downloader.get_raster(
+            "06c37953-31ec-4f6d-ae1f-ccdf31a348ae", "depth-max-dtri"
+        )
+        print(raster)
+
+
+def test_create_raster_task():
+    task = downloader.create_raster_task(
+        downloader.get_raster("06c38953-31ec-4f6d-ae1f-ccdf31a348ae", "depth-max-dtri"),
+        "EPSG:28992",
+        "1000",
+    )
+    assert task is not None
