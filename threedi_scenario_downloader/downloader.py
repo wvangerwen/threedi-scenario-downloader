@@ -87,13 +87,14 @@ def create_raster_task(raster, target_srs, resolution, bounds=None, time=None):
         w, n, e, n, e, s, w, s, w, n
     )
 
-    if time == None:
+    if time is None:
+        # non temporal raster
         url = "{}rasters/{}/data/?cellsize={}&geom={}&srs={}&target_srs={}&format=geotiff&async=true".format(
             LIZARD_URL, raster["uuid"], resolution, bbox, source_srs, target_srs
         )
     else:
-        # temporal rasters to be implemented
-        url = "{}rasters/{}/data/?cellsize={}&geom={}&srs={}&target_srs={}&time={}format=geotiff&async=true".format(
+        # temporal rasters
+        url = "{}rasters/{}/data/?cellsize={}&geom={}&srs={}&target_srs={}&time={}&format=geotiff&async=true".format(
             LIZARD_URL, raster["uuid"], resolution, bbox, source_srs, target_srs, time
         )
     r = requests.get(url=url, headers=get_headers())
@@ -146,18 +147,24 @@ def download_task(task_uuid, pathname=None):
 
 
 def download_raster(
-    scenario_uuid, raster_code, target_srs, resolution, bounds=None, pathname=None
+    scenario_uuid,
+    raster_code,
+    target_srs,
+    resolution,
+    bounds=None,
+    time=None,
+    pathname=None,
 ):
     """
     Method looks up the maximum waterdepth raster based on scenario_uuid, creates a task and downloads task when succesfull
     """
     raster = get_raster(scenario_uuid, raster_code)
-    task = create_raster_task(raster, target_srs, resolution, bounds)
+    task = create_raster_task(raster, target_srs, resolution, bounds, time)
     task_uuid = task["task_id"]
 
     log.debug("Start waiting for task {} to finish".format(task_uuid))
     while get_task_status(task_uuid) == "PENDING":
-        sleep(10)
+        sleep(5)
         log.debug("Still waiting for task {}".format(task_uuid))
 
     if get_task_status(task_uuid) == "SUCCESS":
@@ -180,14 +187,31 @@ def download_raster(
 def download_maximum_waterdepth_raster(
     scenario_uuid, target_srs, resolution, bounds=None, pathname=None
 ):
+    """Complete procedure to download a 3Di maximum waterdepth raster"""
     download_raster(
-        scenario_uuid, "depth-max-dtri", target_srs, resolution, bounds, pathname
+        scenario_uuid, "depth-max-dtri", target_srs, resolution, bounds, None, pathname
     )
 
 
 def download_total_damage_raster(
     scenario_uuid, target_srs, resolution, bounds=None, pathname=None
 ):
+    """Complete procedure to download a 3Di total damage raster"""
     download_raster(
-        scenario_uuid, "3di_damage", target_srs, resolution, bounds, pathname
+        scenario_uuid, "3di_damage", target_srs, resolution, bounds, None, pathname
+    )
+
+
+def download_waterdepth_raster(
+    scenario_uuid, target_srs, resolution, time, bounds=None, pathname=None
+):
+    """Complete procedure to download a snapshot of a temporal 3Di waterdepth raster"""
+    download_raster(
+        scenario_uuid,
+        "depth-dtri",
+        target_srs,
+        resolution,
+        bounds=bounds,
+        time=time,
+        pathname=pathname,
     )

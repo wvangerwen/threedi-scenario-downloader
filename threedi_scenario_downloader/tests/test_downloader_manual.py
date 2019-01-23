@@ -15,10 +15,21 @@ def test_set_headers():
 def test_download_maximum_waterdepth_raster():
     if True:
         downloader.download_maximum_waterdepth_raster(
-            "b41dbf9a-a9ed-4ef3-8929-5e35242fd059",
+            "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
             "EPSG:28992",
-            500,
+            1000,
+            None,
+            "C:/Users/emiel.verstegen/Downloads/max_waterdepth.tif",
+        )
+
+
+def test_download_waterdepth_raster():
+    if True:
+        downloader.download_waterdepth_raster(
+            "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
+            "EPSG:28992",
+            1000,
+            "2016-01-05T03:25:00Z",
             None,
             "C:/Users/emiel.verstegen/Downloads/waterdepth.tif",
         )
-

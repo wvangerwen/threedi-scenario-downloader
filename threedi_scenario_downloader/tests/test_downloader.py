@@ -47,6 +47,11 @@ def test_get_raster():
     assert raster["uuid"] == "4ef95627-e370-4eba-a5bc-bed661a3101a"
 
 
+def test_get_raster_temporal():
+    raster = downloader.get_raster("06c38953-31ec-4f6d-ae1f-ccdf31a348ae", "depth-dtri")
+    assert raster["uuid"] == "907132e8-931a-4b78-8cb1-bad52500be7a"
+
+
 def test_get_raster_from_non_existing_scenario():
     with pytest.raises(HTTPError):
         raster = downloader.get_raster(
