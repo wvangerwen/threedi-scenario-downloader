@@ -128,10 +128,9 @@ def download_file(url, path):
     """
     r = requests.get(url)
     r.raise_for_status()
-    file = open(path, "wb")
-    for chunk in r.iter_content(100000):
-        file.write(chunk)
-    file.close()
+    with open(path, "wb") as file:
+        for chunk in r.iter_content(100000):
+            file.write(chunk)
 
 
 def download_task(task_uuid, pathname=None):
@@ -215,3 +214,16 @@ def download_waterdepth_raster(
         time=time,
         pathname=pathname,
     )
+
+
+def clear_inbox():
+    url = "{}inbox/".format(LIZARD_URL)
+    r = requests.get(url=url, headers=get_headers())
+    r.raise_for_status()
+    messages = r.json()["results"]
+    for msg in messages:
+        msg_id = msg["id"]
+        read_url = "{}inbox/{}/read/".format(LIZARD_URL, msg_id)
+        r = requests.post(url=read_url, headers=get_headers())
+        r.raise_for_status()
+    return True
