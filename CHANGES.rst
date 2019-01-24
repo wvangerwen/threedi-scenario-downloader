@@ -5,7 +5,8 @@ Changelog of threedi-scenario-downloader
 0.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added automatic deploys to
+  https://pypi.org/project/threedi-scenario-downloader/
 
 
 0.1 (2019-01-23)
