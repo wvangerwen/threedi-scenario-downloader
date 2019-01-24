@@ -28,13 +28,13 @@ We're installed with `pipenv <https://docs.pipenv.org/>`_, a handy wrapper
 around pip and virtualenv. Install that first with ``pip install
 pipenv``. Then run::
 
-    $ PIPENV_VENV_IN_PROJECT=1 pipenv --three
-    $ pipenv install --dev
+  $ PIPENV_VENV_IN_PROJECT=1 pipenv --three
+  $ pipenv install --dev
 
 In order to get nicely formatted python files without having to spend manual
 work on it, run the following command periodically::
 
-  $ pipenv run black threedi-scenario-downloader
+  $ pipenv run black threedi_scenario_downloader
 
 Run the tests regularly. This also checks with pyflakes, black and it reports
 coverage. Pure luxury::
@@ -46,3 +46,9 @@ The tests are also run automatically `on travis-ci
 the pull requests. There's also `coverage reporting
 <https://coveralls.io/github/nens/threedi-scenario-downloader>`_ on
 coveralls.io.
+
+If you need a new dependency (like `requests`), add it in `setup.py` in
+`install_requires`. Afterwards, run install again to actuall install your
+dependency::
+
+  $ pipenv install --dev
