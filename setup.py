@@ -26,9 +26,4 @@ setup(
     install_requires=install_requires,
     tests_require=tests_require,
     extras_require={"test": tests_require},
-    entry_points={
-        "console_scripts": [
-            "run-threedi-scenario-downloader = threedi_scenario_downloader.scripts:main"
-        ]
-    },
 )
