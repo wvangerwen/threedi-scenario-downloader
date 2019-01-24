@@ -1,6 +1,10 @@
 language: python
 python:
 - 3.6
+before_install:
+- openssl aes-256-cbc -K $encrypted_c4008ce68f84_key -iv $encrypted_c4008ce68f84_iv
+  -in realconfig.ini.enc -out threedi_scenario_downloader/tests/testdata/realconfig.ini
+  -d
 install:
 - pip install pipenv
 - PIPENV_IGNORE_VIRTUALENVS=1 pipenv install --dev
@@ -8,7 +12,12 @@ script:
 - pipenv run pytest
 after_success:
 - pipenv run coveralls
-before_install:
-- openssl aes-256-cbc -K $encrypted_c4008ce68f84_key -iv $encrypted_c4008ce68f84_iv
-  -in realconfig.ini.enc -out threedi_scenario_downloader/tests/testdata/realconfig.ini
-  -d
+deploy:
+  provider: pypi
+  user: nens
+  password:
+    secure: A4YNqcePWH3agO73LMFp5QXVqadYvawgqHDmN+CofxlIDqoDSKd4Slz7u0rF/rDxjP1hhObzi/c5IuaL8s3dtlk6G20Kf/4vLsFEwyxZpxIaHq9EcofOIOOyDFIIw1cc/TdzTh56mmKkhlXA6vJPgNwwvWjL9V1Gg9r5Ykaci9fcFKeAQjTXR0BK/NjvUnOWQIWLS9ywuOw4IZWE9cZZ4k1xdQ8yIbXhIVcDYFWKfBTECQNV/HMNYrLbMhCDshF7iE3bRjWdQhQmYDum/EqCYTsmMBqUvOMXHx86LIuhprY5S+V9BfcWxpAHHt0Sk/OYBg+s7HvjK0kMByLEJGchx3MLDL1s9tIgfZ4gLR5b6MFtowCAjQ0Cx44oSJdR/n4TaRJRZhxrC859S7NK3/f3dH4almN5FxQkjI2CNBiTN+QxWzPnqv/9OVBQ95xmF5okLPA4QFZcIDS9xRrY6TT/62WPU93ZazhG8+FbUBR83N2d20ZsX5O1U/F2+0Ipd1+n63vBNuWGkOZzXV4vri7wzGAp3j6STtMKWdetGY1UAN+DfkR0ZKktMlryGsmrZq1jU5+MSOg4dlwDHKToKCx2BFBoDmAzznfQgONFq4TyvBs+svoZb9NVBVj/x2Dj4EpyAP6CCMdzywtH+JBFD1A3Ohte5fAJZGwMAYc1shs8x8U=
+  on:
+    tags: true
+  distributions: sdist bdist_wheel
+  skip_existing: true
