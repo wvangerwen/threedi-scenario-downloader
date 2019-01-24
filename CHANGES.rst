@@ -2,7 +2,7 @@ Changelog of threedi-scenario-downloader
 ===================================================
 
 
-0.2 (unreleased)
+0.2 (2019-01-24)
 ----------------
 
 - Added automatic deploys to
