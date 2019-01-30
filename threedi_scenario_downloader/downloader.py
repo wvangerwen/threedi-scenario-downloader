@@ -71,7 +71,7 @@ def create_raster_task(raster, target_srs, resolution, bounds=None, time=None):
     """
     Create a task on the Lizard server to prepare a raster with given SRS and resolution
     Full extent will be used if the bounds are not supplied
-    
+
     """
     if bounds == None:
         bounds = raster["spatial_bounds"]
@@ -124,7 +124,7 @@ def get_task_download_url(task_uuid):
 def download_file(url, path):
     """
     Download a file (url) to the specified path
-    Example: download_file(http://whatever.com/file.txt,os.path.normpath('somefolder/somefile.txt')) 
+    Example: download_file(http://whatever.com/file.txt,os.path.normpath('somefolder/somefile.txt'))
     """
     r = requests.get(url)
     r.raise_for_status()
@@ -218,12 +218,15 @@ def download_waterdepth_raster(
 
 def clear_inbox():
     url = "{}inbox/".format(LIZARD_URL)
-    r = requests.get(url=url, headers=get_headers())
+    r = requests.get(
+        url=url, headers=get_headers(), params={"limit": RESULT_LIMIT}, timeout=10
+    )
     r.raise_for_status()
     messages = r.json()["results"]
     for msg in messages:
         msg_id = msg["id"]
         read_url = "{}inbox/{}/read/".format(LIZARD_URL, msg_id)
-        r = requests.post(url=read_url, headers=get_headers())
-        r.raise_for_status()
+        r = requests.post(url=read_url, headers=get_headers(), timeout=10)
+        # We don't call raise_for_status() here: the message might have already
+        # been read, which is fine.
     return True
