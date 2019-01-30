@@ -31,20 +31,18 @@ def set_headers(username, password):
 def find_scenarios_by_model_slug(model_uuid):
     """return json containing scenarios based on model slug"""
 
-    url = "{}scenarios/?model_name__icontains={}&limit={}".format(
-        LIZARD_URL, model_uuid, RESULT_LIMIT
-    )
-    r = requests.get(url=url, headers=get_headers())
+    url = "{}scenarios/".format(LIZARD_URL)
+    payload = {"model_name__icontains": model_uuid, "limit": RESULT_LIMIT}
+    r = requests.get(url=url, headers=get_headers(), params=payload)
     r.raise_for_status()
     return r.json()["results"]
 
 
 def find_scenarios_by_name(name):
     """return json containing scenarios based on name"""
-    url = "{}scenarios/?name__icontains={}&limit={}".format(
-        LIZARD_URL, name, RESULT_LIMIT
-    )
-    r = requests.get(url=url, headers=get_headers())
+    url = "{}scenarios/".format(LIZARD_URL)
+    payload = {"name__icontains": name, "limit": RESULT_LIMIT}
+    r = requests.get(url=url, headers=get_headers(), params=payload)
     r.raise_for_status()
     return r.json()["results"]
 
@@ -86,21 +84,33 @@ def create_raster_task(raster, target_srs, resolution, bounds=None, time=None):
 
     source_srs = "EPSG:4326"
 
-    bbox = "POLYGON+(({}+{},{}+{},{}+{},{}+{},{}+{}))".format(
+    bbox = "POLYGON(({} {},{} {},{} {},{} {},{} {}))".format(
         w, n, e, n, e, s, w, s, w, n
     )
 
+    url = "{}rasters/{}/data/".format(LIZARD_URL, raster["uuid"])
     if time is None:
         # non temporal raster
-        url = "{}rasters/{}/data/?cellsize={}&geom={}&srs={}&target_srs={}&format=geotiff&async=true".format(
-            LIZARD_URL, raster["uuid"], resolution, bbox, source_srs, target_srs
-        )
+        payload = {
+            "cellsize": resolution,
+            "geom": bbox,
+            "srs": source_srs,
+            "target_srs": target_srs,
+            "format": "geotiff",
+            "async": "true",
+        }
     else:
         # temporal rasters
-        url = "{}rasters/{}/data/?cellsize={}&geom={}&srs={}&target_srs={}&time={}&format=geotiff&async=true".format(
-            LIZARD_URL, raster["uuid"], resolution, bbox, source_srs, target_srs, time
-        )
-    r = requests.get(url=url, headers=get_headers())
+        payload = {
+            "cellsize": resolution,
+            "geom": bbox,
+            "srs": source_srs,
+            "target_srs": target_srs,
+            "time": time,
+            "format": "geotiff",
+            "async": "true",
+        }
+    r = requests.get(url=url, headers=get_headers(), params=payload)
     r.raise_for_status()
     return r.json()
 
@@ -137,8 +147,12 @@ def download_task(task_uuid, pathname=None):
     """download result of successful task"""
     if get_task_status(task_uuid) == "SUCCESS":
         download_url = get_task_download_url(task_uuid)
-        if pathname == None:
+        if pathname is None:
+
+            logging.debug("download_url: {}".format(download_url))
+            logging.debug("urlparse(download_url): {}".format(urlparse(download_url)))
             pathname = os.path.basename(urlparse(download_url).path)
+            logging.debug(pathname)
         download_file(download_url, pathname)
 
 
@@ -225,6 +239,4 @@ def clear_inbox():
         msg_id = msg["id"]
         read_url = "{}inbox/{}/read/".format(LIZARD_URL, msg_id)
         r = requests.post(url=read_url, headers=get_headers(), timeout=10)
-        # We don't call raise_for_status() here: the message might have already
-        # been read, which is fine.
     return True
