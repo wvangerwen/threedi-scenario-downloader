@@ -216,12 +216,15 @@ def download_waterdepth_raster(
 def clear_inbox():
     """delete all messages from Lizard inbox"""
     url = "{}inbox/".format(LIZARD_URL)
-    r = requests.get(url=url, headers=get_headers())
+    r = requests.get(
+        url=url, headers=get_headers(), params={"limit": RESULT_LIMIT}, timeout=10
+    )
     r.raise_for_status()
     messages = r.json()["results"]
     for msg in messages:
         msg_id = msg["id"]
         read_url = "{}inbox/{}/read/".format(LIZARD_URL, msg_id)
-        r = requests.post(url=read_url, headers=get_headers())
-        r.raise_for_status()
+        r = requests.post(url=read_url, headers=get_headers(), timeout=10)
+        # We don't call raise_for_status() here: the message might have already
+        # been read, which is fine.
     return True
