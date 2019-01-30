@@ -7,7 +7,7 @@ import logging
 import os
 
 LIZARD_URL = "https://demo.lizard.net/api/v3/"
-RESULT_LIMIT = 100
+RESULT_LIMIT = 10
 REQUESTS_HEADERS = {}
 
 logging.basicConfig(level=logging.DEBUG)
@@ -28,20 +28,20 @@ def set_headers(username, password):
     REQUESTS_HEADERS["Content-Type"] = "application/json"
 
 
-def find_scenarios_by_model_slug(model_uuid):
+def find_scenarios_by_model_slug(model_uuid, limit=RESULT_LIMIT):
     """return json containing scenarios based on model slug"""
 
     url = "{}scenarios/".format(LIZARD_URL)
-    payload = {"model_name__icontains": model_uuid, "limit": RESULT_LIMIT}
+    payload = {"model_name__icontains": model_uuid, "limit": limit}
     r = requests.get(url=url, headers=get_headers(), params=payload)
     r.raise_for_status()
     return r.json()["results"]
 
 
-def find_scenarios_by_name(name):
+def find_scenarios_by_name(name, limit=RESULT_LIMIT):
     """return json containing scenarios based on name"""
     url = "{}scenarios/".format(LIZARD_URL)
-    payload = {"name__icontains": name, "limit": RESULT_LIMIT}
+    payload = {"name__icontains": name, "limit": limit}
     r = requests.get(url=url, headers=get_headers(), params=payload)
     r.raise_for_status()
     return r.json()["results"]
