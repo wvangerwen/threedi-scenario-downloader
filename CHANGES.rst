@@ -5,7 +5,8 @@ Changelog of threedi-scenario-downloader
 0.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Cleanup of docstrings and usage of request parameters
+- Make result-limit changable
 
 
 0.2 (2019-01-24)
