@@ -63,7 +63,7 @@ def get_netcdf_link(scenario_uuid):
 
 def get_raster(scenario_uuid, raster_code):
     """return json of raster based on scenario uuid and raster type"""
-    
+
     r = requests.get(
         url="{}scenarios/{}".format(LIZARD_URL, scenario_uuid), headers=get_headers()
     )
