@@ -7,7 +7,7 @@ import logging
 import os
 
 LIZARD_URL = "https://demo.lizard.net/api/v3/"
-RESULT_LIMIT = 10
+RESULT_LIMIT = 100
 REQUESTS_HEADERS = {}
 
 logging.basicConfig(level=logging.DEBUG)
@@ -15,17 +15,22 @@ log = logging.getLogger()
 
 
 def get_headers():
+    """return headers"""
+
     return REQUESTS_HEADERS
 
 
 def set_headers(username, password):
+    """set Lizard login credentials"""
+
     REQUESTS_HEADERS["username"] = username
     REQUESTS_HEADERS["password"] = password
     REQUESTS_HEADERS["Content-Type"] = "application/json"
 
 
 def find_scenarios_by_model_slug(model_uuid):
-    """Find all 3Di scenario's produced by the supplied model. User needs to be authorized to view the model results."""
+    """return json containing scenarios based on model slug"""
+
     url = "{}scenarios/?model_name__icontains={}&limit={}".format(
         LIZARD_URL, model_uuid, RESULT_LIMIT
     )
@@ -35,7 +40,7 @@ def find_scenarios_by_model_slug(model_uuid):
 
 
 def find_scenarios_by_name(name):
-    """Find all 3Di scenario's matching the supplied name that the user is authorized for"""
+    """return json containing scenarios based on name"""
     url = "{}scenarios/?name__icontains={}&limit={}".format(
         LIZARD_URL, name, RESULT_LIMIT
     )
@@ -45,7 +50,7 @@ def find_scenarios_by_name(name):
 
 
 def get_netcdf_link(scenario_uuid):
-    """Returns the link to the netcdf file of the supplied scenario"""
+    """return url to raw 3Di results"""
     r = requests.get(
         url="{}scenarios/{}".format(LIZARD_URL, scenario_uuid), headers=get_headers()
     )
@@ -57,7 +62,8 @@ def get_netcdf_link(scenario_uuid):
 
 
 def get_raster(scenario_uuid, raster_code):
-    """Returns the raster json object given the scenario-uuid and the requested raster type"""
+    """return json of raster based on scenario uuid and raster type"""
+    
     r = requests.get(
         url="{}scenarios/{}".format(LIZARD_URL, scenario_uuid), headers=get_headers()
     )
@@ -68,11 +74,8 @@ def get_raster(scenario_uuid, raster_code):
 
 
 def create_raster_task(raster, target_srs, resolution, bounds=None, time=None):
-    """
-    Create a task on the Lizard server to prepare a raster with given SRS and resolution
-    Full extent will be used if the bounds are not supplied
-    
-    """
+    """create Lizard raster task"""
+
     if bounds == None:
         bounds = raster["spatial_bounds"]
 
@@ -104,7 +107,7 @@ def create_raster_task(raster, target_srs, resolution, bounds=None, time=None):
 
 # From here untested methods are added
 def get_task_status(task_uuid):
-    """Returns either SUCCES, PENDING or .......?"""
+    """return status of task"""
     url = "{}tasks/{}/".format(LIZARD_URL, task_uuid)
     r = requests.get(url=url, headers=get_headers())
     r.raise_for_status()
@@ -112,7 +115,7 @@ def get_task_status(task_uuid):
 
 
 def get_task_download_url(task_uuid):
-    """In case the task is a succes, return the url to the file in order to download"""
+    """return url of successful task"""
     if get_task_status(task_uuid) == "SUCCESS":
         url = "{}tasks/{}/".format(LIZARD_URL, task_uuid)
         r = requests.get(url=url, headers=get_headers())
@@ -122,10 +125,7 @@ def get_task_download_url(task_uuid):
 
 
 def download_file(url, path):
-    """
-    Download a file (url) to the specified path
-    Example: download_file(http://whatever.com/file.txt,os.path.normpath('somefolder/somefile.txt')) 
-    """
+    """download url to specified path"""
     r = requests.get(url)
     r.raise_for_status()
     with open(path, "wb") as file:
@@ -134,10 +134,7 @@ def download_file(url, path):
 
 
 def download_task(task_uuid, pathname=None):
-    """
-    Seaches for url belonging to task_uuid and downloads this file to the specified filelocation and name.
-    If no pathname is supplied the url path will be used as a relative path to store the data.
-    """
+    """download result of successful task"""
     if get_task_status(task_uuid) == "SUCCESS":
         download_url = get_task_download_url(task_uuid)
         if pathname == None:
@@ -155,7 +152,7 @@ def download_raster(
     pathname=None,
 ):
     """
-    Method looks up the maximum waterdepth raster based on scenario_uuid, creates a task and downloads task when succesfull
+    download raster
     """
     raster = get_raster(scenario_uuid, raster_code)
     task = create_raster_task(raster, target_srs, resolution, bounds, time)
@@ -186,7 +183,7 @@ def download_raster(
 def download_maximum_waterdepth_raster(
     scenario_uuid, target_srs, resolution, bounds=None, pathname=None
 ):
-    """Complete procedure to download a 3Di maximum waterdepth raster"""
+    """download Maximum waterdepth raster"""
     download_raster(
         scenario_uuid, "depth-max-dtri", target_srs, resolution, bounds, None, pathname
     )
@@ -195,7 +192,7 @@ def download_maximum_waterdepth_raster(
 def download_total_damage_raster(
     scenario_uuid, target_srs, resolution, bounds=None, pathname=None
 ):
-    """Complete procedure to download a 3Di total damage raster"""
+    """download Total Damage raster"""
     download_raster(
         scenario_uuid, "3di_damage", target_srs, resolution, bounds, None, pathname
     )
@@ -204,7 +201,7 @@ def download_total_damage_raster(
 def download_waterdepth_raster(
     scenario_uuid, target_srs, resolution, time, bounds=None, pathname=None
 ):
-    """Complete procedure to download a snapshot of a temporal 3Di waterdepth raster"""
+    """download snapshot of Waterdepth raster"""
     download_raster(
         scenario_uuid,
         "depth-dtri",
@@ -217,6 +214,7 @@ def download_waterdepth_raster(
 
 
 def clear_inbox():
+    """delete all messages from Lizard inbox"""
     url = "{}inbox/".format(LIZARD_URL)
     r = requests.get(url=url, headers=get_headers())
     r.raise_for_status()

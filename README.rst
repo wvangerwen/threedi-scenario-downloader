@@ -18,7 +18,16 @@ We can be installed with::
 
   $ pip install threedi-scenario-downloader
 
-(TODO: after the first release has been made)
+
+Usage
+-----
+
+The threedi-scenario-downloader library can be used within your Python code. After import your credentials have to be set in order to use the library, example:
+
+  $ from threedi-scenario-downloader import downloader
+  $
+  $ downloader.set_header("your_username","your_password")
+  $ downloader.
 
 
 Development installation of this project itself

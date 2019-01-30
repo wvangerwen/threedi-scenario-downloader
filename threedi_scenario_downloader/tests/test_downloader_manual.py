@@ -4,6 +4,7 @@ from threedi_scenario_downloader import downloader
 import configparser
 
 
+
 def test_set_headers():
     config = configparser.ConfigParser()
     config.read("threedi_scenario_downloader/tests/testdata/realconfig.ini")
@@ -19,7 +20,7 @@ def test_download_maximum_waterdepth_raster():
             "EPSG:28992",
             resolution=1000,
             bounds=None,
-            pathname="C:/Users/emiel.verstegen/Downloads/max_waterdepth.tif",
+            pathname="threedi_scenario_downloader/tests/testdata/max_waterdepth.tif",
         )
 
 
@@ -31,7 +32,7 @@ def test_download_waterdepth_raster():
             1000,
             "2018-06-02T06:00:00Z",
             None,
-            "C:/Users/emiel.verstegen/Downloads/waterdepth.tif",
+            "threedi_scenario_downloader/tests/testdata/waterdepth.tif",
         )
 
 
