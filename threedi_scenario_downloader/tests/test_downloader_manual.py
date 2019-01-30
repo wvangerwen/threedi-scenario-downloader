@@ -4,7 +4,6 @@ from threedi_scenario_downloader import downloader
 import configparser
 
 
-
 def test_set_headers():
     config = configparser.ConfigParser()
     config.read("threedi_scenario_downloader/tests/testdata/realconfig.ini")
