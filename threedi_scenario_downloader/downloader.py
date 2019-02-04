@@ -203,12 +203,21 @@ def download_maximum_waterdepth_raster(
     )
 
 
+def download_maximum_waterlevel_raster(
+    scenario_uuid, target_srs, resolution, bounds=None, pathname=None
+):
+    """download Maximum waterdepth raster"""
+    download_raster(
+        scenario_uuid, "s1-max-dtri", target_srs, resolution, bounds, None, pathname
+    )
+
+
 def download_total_damage_raster(
     scenario_uuid, target_srs, resolution, bounds=None, pathname=None
 ):
     """download Total Damage raster"""
     download_raster(
-        scenario_uuid, "3di_damage", target_srs, resolution, bounds, None, pathname
+        scenario_uuid, "total_damage", target_srs, resolution, bounds, None, pathname
     )
 
 
@@ -219,6 +228,36 @@ def download_waterdepth_raster(
     download_raster(
         scenario_uuid,
         "depth-dtri",
+        target_srs,
+        resolution,
+        bounds=bounds,
+        time=time,
+        pathname=pathname,
+    )
+
+
+def download_waterlevel_raster(
+    scenario_uuid, target_srs, resolution, time, bounds=None, pathname=None
+):
+    """download snapshot of Waterdepth raster"""
+    download_raster(
+        scenario_uuid,
+        "s1-dtri",
+        target_srs,
+        resolution,
+        bounds=bounds,
+        time=time,
+        pathname=pathname,
+    )
+
+
+def download_precipitation_raster(
+    scenario_uuid, target_srs, resolution, time, bounds=None, pathname=None
+):
+    """download snapshot of Waterdepth raster"""
+    download_raster(
+        scenario_uuid,
+        "rain-quad",
         target_srs,
         resolution,
         bounds=bounds,
