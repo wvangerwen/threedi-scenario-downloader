@@ -59,6 +59,42 @@ def get_netcdf_link(scenario_uuid):
             return url
 
 
+def get_aggregation_netcdf_link(scenario_uuid):
+    """return url to raw 3Di results"""
+    r = requests.get(
+        url="{}scenarios/{}".format(LIZARD_URL, scenario_uuid), headers=get_headers()
+    )
+    r.raise_for_status()
+    for result in r.json()["result_set"]:
+        if result["result_type"]["code"] == "aggregate-results-3di":
+            url = result["attachment_url"]
+            return url
+
+
+def get_gridadmin_link(scenario_uuid):
+    """return url to gridadministration"""
+    r = requests.get(
+        url="{}scenarios/{}".format(LIZARD_URL, scenario_uuid), headers=get_headers()
+    )
+    r.raise_for_status()
+    for result in r.json()["result_set"]:
+        if result["result_type"]["code"] == "grid-admin":
+            url = result["attachment_url"]
+            return url
+
+
+def get_logging_link(scenario_uuid):
+    """return url to zipped logging"""
+    r = requests.get(
+        url="{}scenarios/{}".format(LIZARD_URL, scenario_uuid), headers=get_headers()
+    )
+    r.raise_for_status()
+    for result in r.json()["result_set"]:
+        if result["result_type"]["code"] == "logfiles":
+            url = result["attachment_url"]
+            return url
+
+
 def get_raster(scenario_uuid, raster_code):
     """return json of raster based on scenario uuid and raster type"""
 
@@ -136,6 +172,7 @@ def get_task_download_url(task_uuid):
 
 def download_file(url, path):
     """download url to specified path"""
+    logging.debug("Start downloading file: {}".format(url))
     r = requests.get(url)
     r.raise_for_status()
     with open(path, "wb") as file:
@@ -264,6 +301,16 @@ def download_precipitation_raster(
         time=time,
         pathname=pathname,
     )
+
+
+# def download_raw_results(scenario_uuid, pathname=None):
+#    url = get_netcdf_link(scenario_uuid)
+#    download_file(url, pathname)
+
+
+# def download_grid_administration(scenario_uuid, pathname=None):
+#    url = get_gridadmin_link(scenario_uuid)
+#    download_file(url, pathname)
 
 
 def clear_inbox():
