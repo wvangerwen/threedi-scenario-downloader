@@ -1,18 +1,11 @@
 Changelog of threedi-scenario-downloader
 ===================================================
 
-
-0.4 (unreleased)
-----------------
-
-- Added url retrieval methods- Added editable result limit on searches
-
-
-0.3 (2019-01-30)
+0.3 (unreleased)
 ----------------
 
 - Cleanup of docstrings and usage of request parameters
-- Make result-limit changable
+- Make result-limit changable- Added url retrieval methods- Added editable result limit on searches
 
 
 0.2 (2019-01-24)
