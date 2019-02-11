@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """The downloader part of the threedi_scenario_downloader supplies the user with often used functionality to look up and export 3Di results using the Lizard API"""
-import requests
+from datetime import datetime
 from urllib.parse import urlparse
 from time import sleep
 import logging
 import os
+import requests
 
 LIZARD_URL = "https://demo.lizard.net/api/v3/"
 RESULT_LIMIT = 10
@@ -194,18 +195,20 @@ def download_task(task_uuid, pathname=None):
 
 
 def download_raster(
-    scenario_uuid,
-    raster_code,
-    target_srs,
-    resolution,
-    bounds=None,
-    time=None,
-    pathname=None,
+    scenario, raster_code, target_srs, resolution, bounds=None, time=None, pathname=None
 ):
     """
     download raster
     """
-    raster = get_raster(scenario_uuid, raster_code)
+    if type(scenario) is str:
+        # assume uuid
+        raster = get_raster(scenario_uuid, raster_code)
+    elif type(scenario) is dict:
+        # assume json object
+        raster = get_raster_from_json(scenario, raster_code)
+    else:
+        log.debug("Invalid scenario: supply a json object or uuid string")
+
     task = create_raster_task(raster, target_srs, resolution, bounds, time)
     task_uuid = task["task_id"]
 
