@@ -1,7 +1,7 @@
 Changelog of threedi-scenario-downloader
 ===================================================
 
-0.5 (unreleased)
+0.5 (2019-02-13)
 ----------------
 
 - Cleanup of docstrings and usage of request parameters
