@@ -1,7 +1,7 @@
 Changelog of threedi-scenario-downloader
 ===================================================
 
-0.6 (unreleased)
+0.6 (2019-02-13)
 ----------------
 
 - Added method for downloading raw 3Di result
