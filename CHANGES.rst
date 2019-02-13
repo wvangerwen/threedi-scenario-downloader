@@ -4,7 +4,11 @@ Changelog of threedi-scenario-downloader
 0.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added method for downloading raw 3Di result
+
+- Added method for downloading gridadmin
+
+- Added authentication method for downloading files from Lizard API
 
 
 0.5 (2019-02-13)
