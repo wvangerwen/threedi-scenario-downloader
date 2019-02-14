@@ -39,7 +39,7 @@ Do you want to download the raw 3Di-results (.nc and .h5 files) of a specific sc
 or::
 
   $ dl.download_raw_results("scenario_uuid",pathname="save_under_different_name.nc")
-  $ dl.download_grid_administration("scenario_uuid",pathname="save_under_different_name.nc")
+  $ dl.download_grid_administration("scenario_uuid",pathname="save_under_different_name.h5")
 
 Downloading (temporal) rasters of specific scenarios can be done using the following methods::
 
