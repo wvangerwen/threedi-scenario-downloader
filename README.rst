@@ -20,26 +20,31 @@ Start importing the package::
 
 Set headers for authentication to the Lizard API::
   
-  $ dl.set_headers('your_username','your_password')
+  $ dl.set_headers("your_username","your_password")
 
 Find scenarios based on a model slug (unique model identifier) or scenario name. Returns last 10 matching results unless told otherwise::
 
-  $ scenarios = dl.find_scenarios_by_model_slug('enter your model_uuid',limit=10
+  $ scenarios = dl.find_scenarios_by_model_slug("enter your model_uuid",limit=10
   
 or::
 
-  $ scenarios = dl.find_scenarios_by_name('my_first_scenario',limit=100)
+  $ scenarios = dl.find_scenarios_by_name("my_first_scenario",limit=100)
 
 Do you want to download the raw 3Di-results (.nc and .h5 files) of a specific scenario? Use the following methods::
 
-  $ dl.download_raw_results('scenario_uuid')
-  $ dl.download_grid_administration('scenario_uuid')
+  $ dl.download_raw_results("scenario_uuid")
+  $ dl.download_grid_administration("scenario_uuid")
 
 
 or::
 
-  $ dl.download_raw_results('scenario_uuid',pathname='save_under_different_name.nc')
-  $ dl.download_grid_administration('scenario_uuid',pathname='save_under_different_name.nc')
+  $ dl.download_raw_results("scenario_uuid",pathname="save_under_different_name.nc")
+  $ dl.download_grid_administration("scenario_uuid",pathname="save_under_different_name.nc")
+
+Downloading (temporal) rasters of specific scenarios can be done using the following methods::
+
+  $ dl.download_maximum_waterdepth_raster("scenario_uuid","EPSG:28992",10) #downloads the full extent of the maximum waterdepth of the given scenario_uuid with a 10 meter resolution in the RD New/Amersfoort projection (EPSG:28992)
+  $ dl.download_waterdepth_raster("scenario_uuid","EPSG:28992",10,"2019-01-01T02:00") #download the full extend of the waterdepth at the supplied timestamp given scenario_uuid, on 10 meter resolution in the RD New/Amersfoort projection (EPSG:28992)
 
 
 Installation
