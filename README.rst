@@ -12,6 +12,35 @@ Example methods are:
 - Download waterdepth (temporal raster, supply timestamp for snapshot).
 - Find all scenarios model slug or scenario name.
 
+Examples
+========================================
+Start importing the package
+  
+  $ from threedi_scenario_downloader import downloader as dl
+
+Set headers for authentication to the Lizard API
+  
+  $ dl.set_headers('your_username','your_password')
+
+Find scenarios based on a model slug (unique model identifier) or scenario name. Returns last 10 matching results unless told otherwise.
+
+  $ scenarios = dl.find_scenarios_by_model_slug('enter your model_uuid',limit=10
+  
+or
+
+  $ scenarios = dl.find_scenarios_by_name('my_first_scenario',limit=100)
+
+Do you want to download the raw 3Di-results (.nc and .h5 files) of a specific scenario? Use the following methods:
+
+  $ download_raw_results('scenario_uuid')
+  $ download_grid_administration('scenario_uuid')
+
+
+  or
+
+  $ download_raw_results('scenario_uuid',pathname='save_under_different_name.nc')
+  $ download_grid_administration('scenario_uuid',pathname='save_under_different_name.nc')
+  
 
 Installation
 ------------
