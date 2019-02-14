@@ -44,11 +44,15 @@ or::
 Downloading (temporal) rasters of specific scenarios can be done using the following methods::
 
   $ dl.download_maximum_waterdepth_raster("scenario_uuid","EPSG:28992",10) 
-  #downloads the full extent of the maximum waterdepth of the given scenario_uuid with a 10 meter resolution in the RD New/Amersfoort projection (EPSG:28992)
+  #download the full extent of the maximum waterdepth of the given scenario_uuid with a 10 meter resolution in the RD New/Amersfoort projection (EPSG:28992)
   
   $ dl.download_waterdepth_raster("scenario_uuid","EPSG:28992",10,"2019-01-01T02:00") 
   #download the full extend of the waterdepth at the supplied timestamp given scenario_uuid, on 10 meter resolution in the RD New/Amersfoort projection (EPSG:28992)
 
+The raster download methods creates a task for the API. Depending on the size and resolution it takes some time for the raster to be prepared. These methods will keep on checking if the raster is ready to be downloaded.
+When a raster is ready to be downloaded a message in the Lizard portal is created as well. If you want to delete these messages (due to bulk downloading for example), use the following method::
+
+  $dl.clear_inbox()
 
 Installation
 ------------
