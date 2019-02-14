@@ -34,3 +34,5 @@ coverage.xml
 docker-compose.override.yml
 *.ini
 *.tif
+*.h5
+*.nc

@@ -54,3 +54,14 @@ def test_download_waterdepth_raster():
 def test_clear_inbox():
     result = downloader.clear_inbox()
     assert result
+
+
+def test_get_attachment_links():
+    scenario = downloader.find_scenarios_by_name("lizardapitest")[0]
+    links = downloader.get_attachment_links(scenario)
+    assert links is not None
+
+def test_rasters_in_scenario():
+    scenario = downloader.find_scenarios_by_name("lizardapitest")[0]
+    static_rasters, temporal_rasters = downloader.rasters_in_scenario(scenario)
+    assert static_rasters is not None and temporal_rasters is not None
