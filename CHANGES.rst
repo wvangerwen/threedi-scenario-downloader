@@ -1,7 +1,7 @@
 Changelog of threedi-scenario-downloader
 ===================================================
 
-0.7 (unreleased)
+0.7 (2019-02-15)
 ----------------
 
 - Added temporal rasters with interval
