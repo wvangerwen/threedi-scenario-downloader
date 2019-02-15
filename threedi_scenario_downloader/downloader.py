@@ -202,7 +202,7 @@ def download_raster(
     """
     if type(scenario) is str:
         # assume uuid
-        raster = get_raster(scenario_uuid, raster_code)
+        raster = get_raster(scenario, raster_code)
     elif type(scenario) is dict:
         # assume json object
         raster = get_raster_from_json(scenario, raster_code)
