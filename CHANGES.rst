@@ -4,7 +4,9 @@ Changelog of threedi-scenario-downloader
 0.7 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added temporal rasters with interval
+
+- Retrieve grouped (static, temporal) download links from scenario
 
 
 0.6 (2019-02-13)
