@@ -1,18 +1,9 @@
 from setuptools import setup
 
-
-version = "0.4.dev0"
-
-
+version = "0.7.dev0"
 long_description = "\n\n".join([open("README.rst").read(), open("CHANGES.rst").read()])
-
-
 install_requires = ["requests"]
-
-
 tests_require = ["pytest", "mock", "pytest-cov", "pytest-flakes", "pytest-black"]
-
-
 setup(
     name="threedi-scenario-downloader",
     version=version,

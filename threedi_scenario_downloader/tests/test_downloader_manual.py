@@ -35,20 +35,25 @@ def test_download_waterdepth_raster():
         )
 
 
-# def test_download_raw_results():
-#    downloader.download_raw_results(
-#        "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
-#        "threedi_scenario_downloader/tests/testdata/test.nc",
-#    )
-#    assert True
+def test_get_netcdf_link():
+    url = downloader.get_netcdf_link("06c38953-31ec-4f6d-ae1f-ccdf31a348ae")
+    assert url == "https://demo.lizard.net/api/v3/scenario-results/52331/results_3di.nc"
 
 
-# def test_download_grid_administration():
-#    downloader.download_grid_administration(
-#        "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
-#        "threedi_scenario_downloader/tests/testdata/test.h5",
-#    )
-#    assert True
+def test_download_raw_results():
+    downloader.download_raw_results(
+        "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
+        "threedi_scenario_downloader/tests/testdata/test.nc",
+    )
+    assert True
+
+
+def test_download_grid_administration():
+    downloader.download_grid_administration(
+        "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
+        "threedi_scenario_downloader/tests/testdata/test.h5",
+    )
+    assert True
 
 
 def test_clear_inbox():

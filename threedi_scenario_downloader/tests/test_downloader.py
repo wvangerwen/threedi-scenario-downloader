@@ -57,7 +57,7 @@ def test_get_raster_from_non_existing_scenario():
         raster = downloader.get_raster(
             "06c37953-31ec-4f6d-ae1f-ccdf31a348ae", "depth-max-dtri"
         )
-        print(raster)
+        assert raster is not None
 
 
 def test_create_raster_task():
