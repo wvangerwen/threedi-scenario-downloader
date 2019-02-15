@@ -335,9 +335,9 @@ def get_attachment_links(scenario_json):
     """get links to static scenario results"""
     attachment_links = {}
     for result in scenario_json["result_set"]:
-        if result['attachment_url']:
+        if result["attachment_url"]:
             result_name = result["result_type"]["name"]
-            attachment_links[result_name] = result['attachment_url']
+            attachment_links[result_name] = result["attachment_url"]
     if attachment_links:
         return attachment_links
     else:
@@ -363,7 +363,6 @@ def rasters_in_scenario(scenario_json):
     return static_rasters, temporal_rasters
 
 
-
 def get_raster_link(raster, target_srs, resolution, bounds=None, time=None):
     """get url to download raster"""
     task = create_raster_task(raster, target_srs, resolution, bounds, time)
@@ -385,44 +384,57 @@ def get_raster_link(raster, target_srs, resolution, bounds=None, time=None):
         return None
 
 
-def get_static_rasters_links(static_rasters, target_srs, resolution, bounds=None, time=None):
+def get_static_rasters_links(
+    static_rasters, target_srs, resolution, bounds=None, time=None
+):
     """return a dict of urls to geotiff files of static rasters in scenario
     the dict items are formatted as result_name: link.tif"""
     static_raster_urls = {}
     for static_raster in static_rasters:
-        name = static_raster['name_3di']
-        static_raster_url = get_raster_link(static_raster, target_srs, resolution, bounds, time)
+        name = static_raster["name_3di"]
+        static_raster_url = get_raster_link(
+            static_raster, target_srs, resolution, bounds, time
+        )
         static_raster_urls[name] = static_raster_url
     return static_raster_urls
 
 
-def get_temporal_raster_links(temporal_raster, target_srs, resolution, bounds=None, interval_hours=None):
+def get_temporal_raster_links(
+    temporal_raster, target_srs, resolution, bounds=None, interval_hours=None
+):
     """return a dict of urls to geotiff files of a temporal raster
     the dict items are formatted as name_3di_datetime: link.tif"""
     temporal_raster_urls = {}
-    name = temporal_raster['name_3di']
+    name = temporal_raster["name_3di"]
     timesteps = get_raster_timesteps(temporal_raster, interval_hours)
     for timestep in timesteps:
-        download_url = get_raster_link(temporal_raster, target_srs, resolution, bounds, timestep)
-        url_timestep = os.path.splitext(download_url)[0].split('_')[-1]
+        download_url = get_raster_link(
+            temporal_raster, target_srs, resolution, bounds, timestep
+        )
+        url_timestep = os.path.splitext(download_url)[0].split("_")[-1]
         # Lizard returns the nearest timestep based on the time=timestep request
-        timestep_url_format = "{}Z".format(timestep.split('.')[0].replace('-', ''))
+        timestep_url_format = "{}Z".format(timestep.split(".")[0].replace("-", ""))
         if timestep_url_format == url_timestep:
             # when requested and retrieved timesteps are equal, use the timestep
-            name_timestep = '_'.join([name, timestep])
+            name_timestep = "_".join([name, timestep])
         else:
             # if not equal, indicate the datetime discrepancy in file name
-            name_timestep = '{}_get_{}_got_{}'.format(name, timestep_url_format, url_timestep)
+            name_timestep = "{}_get_{}_got_{}".format(
+                name, timestep_url_format, url_timestep
+            )
         temporal_raster_urls[name_timestep] = download_url
     return temporal_raster_urls
 
 
-def get_temporal_rasters_links(temporal_rasters, target_srs, resolution, bounds=None, interval_hours=None):
+def get_temporal_rasters_links(
+    temporal_rasters, target_srs, resolution, bounds=None, interval_hours=None
+):
     """get links to all temporal rasters"""
     temporal_rasters_urls = {}
     for temporal_raster in temporal_rasters:
         temporal_raster_urls = get_temporal_raster_links(
-            temporal_raster, target_srs, resolution, bounds, interval_hours)
+            temporal_raster, target_srs, resolution, bounds, interval_hours
+        )
         for name_timestep, download_url in temporal_raster_urls.items():
             temporal_rasters_urls.setdefault(name_timestep, download_url)
     return temporal_rasters_urls
@@ -434,16 +446,20 @@ def get_raster_timesteps(raster, interval_hours=None):
     The intermediate timesteps are determined by the interval.
     When no interval is provided, the first, middle and last timesteps are returned
     """
-    raster_uuid = raster['uuid']
+    raster_uuid = raster["uuid"]
     if not raster["temporal"]:
         return [None]
     if not interval_hours:
         # assume interval of store (rounded minutes) and return first, middle and last raster
         url = "{}rasters/{}/timesteps/".format(LIZARD_URL, raster_uuid)
         timesteps_json = request_json_from_url(url)
-        timesteps_ms = timesteps_json['steps']
+        timesteps_ms = timesteps_json["steps"]
         # only return first, middle and last raster
-        timesteps_ms = [timesteps_ms[0], timesteps_ms[round(len(timesteps_ms)/2)], timesteps_ms[-1]]
+        timesteps_ms = [
+            timesteps_ms[0],
+            timesteps_ms[round(len(timesteps_ms) / 2)],
+            timesteps_ms[-1],
+        ]
     else:
         # use interval from argument
         first_timestamp = int(raster["first_value_timestamp"])
