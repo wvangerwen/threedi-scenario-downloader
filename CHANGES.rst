@@ -4,7 +4,7 @@ Changelog of threedi-scenario-downloader
 0.8 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Bugfix in downloading total damage rasters
 
 
 0.7 (2019-02-15)

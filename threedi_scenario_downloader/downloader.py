@@ -11,8 +11,13 @@ LIZARD_URL = "https://demo.lizard.net/api/v3/"
 RESULT_LIMIT = 10
 REQUESTS_HEADERS = {}
 
-logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger()
+
+
+def set_logging_level(level):
+    """set logging level to the supplied level"""
+
+    log.level(level)
 
 
 def get_headers():
@@ -257,7 +262,7 @@ def download_total_damage_raster(
 ):
     """download Total Damage raster"""
     download_raster(
-        scenario_uuid, "total_damage", target_srs, resolution, bounds, None, pathname
+        scenario_uuid, "total-damage", target_srs, resolution, bounds, None, pathname
     )
 
 
