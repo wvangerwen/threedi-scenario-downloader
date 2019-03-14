@@ -1,6 +1,6 @@
 from setuptools import setup
 
-version = "0.8"
+version = "0.9.dev0"
 long_description = "\n\n".join([open("README.rst").read(), open("CHANGES.rst").read()])
 install_requires = ["requests"]
 tests_require = ["pytest", "mock", "pytest-cov", "pytest-flakes", "pytest-black"]
