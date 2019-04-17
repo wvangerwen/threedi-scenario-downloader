@@ -2,6 +2,7 @@
 """Tests for downloader.py"""
 from threedi_scenario_downloader import downloader
 import configparser
+import os
 
 
 def test_set_headers():
@@ -13,26 +14,28 @@ def test_set_headers():
 
 
 def test_download_maximum_waterdepth_raster():
-    if True:
-        downloader.download_maximum_waterdepth_raster(
-            "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
-            "EPSG:28992",
-            resolution=1000,
-            bounds=None,
-            pathname="threedi_scenario_downloader/tests/testdata/max_waterdepth.tif",
-        )
+    downloader.download_maximum_waterdepth_raster(
+        "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
+        "EPSG:28992",
+        resolution=1000,
+        bounds=None,
+        pathname="threedi_scenario_downloader/tests/testdata/max_waterdepth.tif",
+    )
+    assert os.path.isfile(
+        "threedi_scenario_downloader/tests/testdata/max_waterdepth.tif"
+    )
 
 
 def test_download_waterdepth_raster():
-    if True:
-        downloader.download_waterdepth_raster(
-            "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
-            "EPSG:28992",
-            1000,
-            "2018-06-02T06:00:00Z",
-            None,
-            "threedi_scenario_downloader/tests/testdata/waterdepth.tif",
-        )
+    downloader.download_waterdepth_raster(
+        "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
+        "EPSG:28992",
+        1000,
+        "2018-06-02T06:00:00Z",
+        None,
+        "threedi_scenario_downloader/tests/testdata/waterdepth.tif",
+    )
+    assert os.path.isfile("threedi_scenario_downloader/tests/testdata/waterdepth.tif")
 
 
 def test_get_netcdf_link():
@@ -45,7 +48,7 @@ def test_download_raw_results():
         "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
         "threedi_scenario_downloader/tests/testdata/test.nc",
     )
-    assert True
+    assert os.path.isfile("threedi_scenario_downloader/tests/testdata/test.nc")
 
 
 def test_download_grid_administration():
@@ -53,7 +56,7 @@ def test_download_grid_administration():
         "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
         "threedi_scenario_downloader/tests/testdata/test.h5",
     )
-    assert True
+    assert os.path.isfile("threedi_scenario_downloader/tests/testdata/test.h5")
 
 
 def test_clear_inbox():
@@ -83,36 +86,36 @@ def test_get_raster_link():
     assert download_url is not None
 
 
-def test_get_static_rasters_links():
-    scenario = downloader.find_scenarios_by_name("lizardapitest")[0]
-    static_rasters, _ = downloader.rasters_in_scenario(scenario)
-    static_rasters = [x for x in static_rasters if x["spatial_bounds"]]
-    static_rasters_urls = downloader.get_static_rasters_links(
-        static_rasters, "EPSG:4326", 1000, bounds=None, time=None
-    )
-    assert isinstance(static_rasters_urls, dict)
+# def test_get_static_rasters_links():
+#    scenario = downloader.find_scenarios_by_name("lizardapitest")[0]
+#    static_rasters, _ = downloader.rasters_in_scenario(scenario)
+#    static_rasters = [x for x in static_rasters if x["spatial_bounds"]]
+#    static_rasters_urls = downloader.get_static_rasters_links(
+#        static_rasters, "EPSG:4326", 1000, bounds=None, time=None
+#    )
+#    assert isinstance(static_rasters_urls, dict)
 
 
-def test_get_temporal_raster_links():
-    scenario = downloader.find_scenarios_by_name("lizardapitest")[0]
-    _, temporal_rasters = downloader.rasters_in_scenario(scenario)
-    temporal_rasters = [x for x in temporal_rasters if x["spatial_bounds"]]
-    temporal_raster = temporal_rasters[0]
+# def test_get_temporal_raster_links():
+#    scenario = downloader.find_scenarios_by_name("lizardapitest")[0]
+#    _, temporal_rasters = downloader.rasters_in_scenario(scenario)
+#    temporal_rasters = [x for x in temporal_rasters if x["spatial_bounds"]]
+#    temporal_raster = temporal_rasters[0]
+#
+#    temporal_raster_urls = downloader.get_temporal_raster_links(
+#        temporal_raster, "EPSG:4326", 1000, bounds=None, interval_hours=None
+#    )
+#    assert isinstance(temporal_raster_urls, dict) and len(temporal_raster_urls) > 1
 
-    temporal_raster_urls = downloader.get_temporal_raster_links(
-        temporal_raster, "EPSG:4326", 1000, bounds=None, interval_hours=None
-    )
-    assert isinstance(temporal_raster_urls, dict) and len(temporal_raster_urls) > 1
 
-
-def test_get_temporal_rasters_links():
-    scenario = downloader.find_scenarios_by_name("lizardapitest")[0]
-    _, temporal_rasters = downloader.rasters_in_scenario(scenario)
-    temporal_rasters = [x for x in temporal_rasters if x["spatial_bounds"]]
-    temporal_rasters_urls = downloader.get_temporal_rasters_links(
-        temporal_rasters, "EPSG:4326", 1000, bounds=None, interval_hours=None
-    )
-    assert isinstance(temporal_rasters_urls, dict)
+# def test_get_temporal_rasters_links():
+#    scenario = downloader.find_scenarios_by_name("lizardapitest")[0]
+#    _, temporal_rasters = downloader.rasters_in_scenario(scenario)
+#    temporal_rasters = [x for x in temporal_rasters if x["spatial_bounds"]]
+#    temporal_rasters_urls = downloader.get_temporal_rasters_links(
+#        temporal_rasters, "EPSG:4326", 1000, bounds=None, interval_hours=None
+#    )
+#    assert isinstance(temporal_rasters_urls, dict)
 
 
 def test_get_raster_timesteps():
