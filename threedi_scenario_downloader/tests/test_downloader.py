@@ -23,6 +23,18 @@ def test_get_headers():
     assert headers["password"] == config["credentials"]["password"]
 
 
+def test_find_scenario():
+    r1 = downloader.find_scenarios(name="ardapitest_txloffg")
+    r2 = downloader.find_scenarios(name="ardapitest_txloffg", model_revision=19)
+    r3 = downloader.find_scenarios(name="ardapitest_txloffg", model_revision=9)
+
+    assert (
+        r1[0]["uuid"] == "06c38953-31ec-4f6d-ae1f-ccdf31a348ae"
+        and r2[0]["uuid"] == "06c38953-31ec-4f6d-ae1f-ccdf31a348ae"
+        and len(r3) == 0
+    )
+
+
 def test_find_scenario_by_model_slug():
     r = downloader.find_scenarios_by_model_slug(
         "005a58d09538e4e4cdbe48f2f3f22aeb89330ae4"

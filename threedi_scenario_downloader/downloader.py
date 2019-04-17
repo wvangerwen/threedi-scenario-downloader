@@ -13,6 +13,16 @@ REQUESTS_HEADERS = {}
 
 log = logging.getLogger()
 
+SCENARIO_FILTERS = {
+    "name": "name__icontains",
+    "uuid": "uuid",
+    "id": "id",
+    "model_revision": "model_revision",
+    "model_name": "model_name__icontains",
+    "organisation": "organisation__icontains",
+    "username": "username__icontains",
+}
+
 
 def set_logging_level(level):
     """set logging level to the supplied level"""
@@ -32,6 +42,20 @@ def set_headers(username, password):
     REQUESTS_HEADERS["username"] = username
     REQUESTS_HEADERS["password"] = password
     REQUESTS_HEADERS["Content-Type"] = "application/json"
+
+
+def find_scenarios(limit=RESULT_LIMIT, **kwargs):
+    """return json containing scenarios based on supplied filters"""
+    url = "{}scenarios/".format(LIZARD_URL)
+
+    payload = {"limit": limit}
+    for key, value in kwargs.items():
+        api_filter = SCENARIO_FILTERS[key]
+        payload[api_filter] = value
+
+    r = requests.get(url=url, headers=get_headers(), params=payload)
+    r.raise_for_status()
+    return r.json()["results"]
 
 
 def find_scenarios_by_model_slug(model_uuid, limit=RESULT_LIMIT):

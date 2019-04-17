@@ -88,7 +88,7 @@ def test_get_static_rasters_links():
     static_rasters, _ = downloader.rasters_in_scenario(scenario)
     static_rasters = [x for x in static_rasters if x["spatial_bounds"]]
     static_rasters_urls = downloader.get_static_rasters_links(
-        static_rasters, "EPSG:4326", 10, bounds=None, time=None
+        static_rasters, "EPSG:4326", 1000, bounds=None, time=None
     )
     assert isinstance(static_rasters_urls, dict)
 
@@ -100,7 +100,7 @@ def test_get_temporal_raster_links():
     temporal_raster = temporal_rasters[0]
 
     temporal_raster_urls = downloader.get_temporal_raster_links(
-        temporal_raster, "EPSG:4326", 10, bounds=None, interval_hours=None
+        temporal_raster, "EPSG:4326", 1000, bounds=None, interval_hours=None
     )
     assert isinstance(temporal_raster_urls, dict) and len(temporal_raster_urls) > 1
 
@@ -110,7 +110,7 @@ def test_get_temporal_rasters_links():
     _, temporal_rasters = downloader.rasters_in_scenario(scenario)
     temporal_rasters = [x for x in temporal_rasters if x["spatial_bounds"]]
     temporal_rasters_urls = downloader.get_temporal_rasters_links(
-        temporal_rasters, "EPSG:4326", 10, bounds=None, interval_hours=None
+        temporal_rasters, "EPSG:4326", 1000, bounds=None, interval_hours=None
     )
     assert isinstance(temporal_rasters_urls, dict)
 
