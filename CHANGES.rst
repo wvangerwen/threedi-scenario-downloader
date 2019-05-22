@@ -4,7 +4,9 @@ Changelog of threedi-scenario-downloader
 0.9 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Updated download method using stream
+
+- Updated urllib3 dependency
 
 
 0.8 (2019-03-14)
