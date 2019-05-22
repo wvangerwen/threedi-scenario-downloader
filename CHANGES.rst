@@ -1,7 +1,7 @@
 Changelog of threedi-scenario-downloader
 ===================================================
 
-0.9 (unreleased)
+0.9 (2019-05-22)
 ----------------
 
 - Updated download method using stream
