@@ -1,7 +1,7 @@
 Changelog of threedi-scenario-downloader
 ===================================================
 
-0.10 (unreleased)
+0.10 (2019-05-27)
 -----------------
 
 - Increased download chunk size
