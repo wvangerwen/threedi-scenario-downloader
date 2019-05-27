@@ -32,10 +32,27 @@ def test_download_waterdepth_raster():
         "EPSG:28992",
         1000,
         "2018-06-02T06:00:00Z",
-        None,
-        "threedi_scenario_downloader/tests/testdata/waterdepth.tif",
+        bounds=None,
+        bounds_srs=None,
+        pathname="threedi_scenario_downloader/tests/testdata/waterdepth.tif",
     )
     assert os.path.isfile("threedi_scenario_downloader/tests/testdata/waterdepth.tif")
+
+
+def test_download_waterdepth_raster_reprojected_bounds():
+    bounds = {"east": 115000, "west": 114000, "north": 561000, "south": 560000}
+    downloader.download_waterdepth_raster(
+        "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
+        "EPSG:28992",
+        1000,
+        "2018-06-02T06:00:00Z",
+        bounds=bounds,
+        bounds_srs="EPSG:28992",
+        pathname="threedi_scenario_downloader/tests/testdata/waterdepth_reprojected.tif",
+    )
+    assert os.path.isfile(
+        "threedi_scenario_downloader/tests/testdata/waterdepth_reprojected.tif"
+    )
 
 
 def test_get_netcdf_link():

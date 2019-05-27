@@ -4,7 +4,9 @@ Changelog of threedi-scenario-downloader
 0.10 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Increased download chunk size
+
+- Added bounds_srs as optional argument to define the spatial reference system the bounds are supplied in
 
 
 0.9 (2019-05-22)
