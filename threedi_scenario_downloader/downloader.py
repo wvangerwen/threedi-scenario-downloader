@@ -14,7 +14,8 @@ REQUESTS_HEADERS = {}
 log = logging.getLogger()
 
 SCENARIO_FILTERS = {
-    "name": "name__icontains",
+    "name": "name",
+    "name__icontains": "name__icontains",
     "uuid": "uuid",
     "id": "id",
     "model_revision": "model_revision",
