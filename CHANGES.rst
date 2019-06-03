@@ -1,7 +1,7 @@
 Changelog of threedi-scenario-downloader
 ===================================================
 
-0.11 (unreleased)
+0.11 (2019-06-03)
 -----------------
 
 - Updated find_scenarios method. Use 'name' argument for exact searches and 'name__icontains' for partial searches
