@@ -1,7 +1,7 @@
 Changelog of threedi-scenario-downloader
 ===================================================
 
-0.12 (unreleased)
+0.12 (2020-02-18)
 -----------------
 
 - Adaptation for improved feedback from Lizard API task endpoint
