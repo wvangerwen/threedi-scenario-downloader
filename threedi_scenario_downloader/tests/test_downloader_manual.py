@@ -148,11 +148,11 @@ def test_get_raster_from_json():
         "71407b2988ea075022d2095c2c942c0f5a7bac6e"
     )[0]
     raster = downloader.get_raster_from_json(scenario, "depth-max-dtri")
-    assert raster["uuid"] == "4ef95627-e370-4eba-a5bc-bed661a3101a"
+    assert raster["uuid"] == "df512f0f-ccb1-4ee1-af68-0d2fdd8c6144"
 
 
 def test_request_json_from_url():
     url = (
-        "https://demo.lizard.net/api/v3/scenarios/06c38953-31ec-4f6d-ae1f-ccdf31a348ae/"
+        "https://demo.lizard.net/api/v3/scenarios/97458c61-dbcd-41fd-a6f6-1a4e10418e00/"
     )
     assert isinstance(downloader.request_json_from_url(url, params=None), dict)
