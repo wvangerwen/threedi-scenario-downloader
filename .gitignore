@@ -19,6 +19,7 @@ ansible/*.retry
 
 # Unit test / coverage reports
 .coverage
+.coverage.*
 .tox
 nosetests.xml
 htmlcov
