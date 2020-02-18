@@ -15,7 +15,7 @@ def test_set_headers():
 
 def test_download_maximum_waterdepth_raster():
     downloader.download_maximum_waterdepth_raster(
-        "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
+        "97458c61-dbcd-41fd-a6f6-1a4e10418e00",
         "EPSG:28992",
         resolution=1000,
         bounds=None,
@@ -28,7 +28,7 @@ def test_download_maximum_waterdepth_raster():
 
 def test_download_waterdepth_raster():
     downloader.download_waterdepth_raster(
-        "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
+        "97458c61-dbcd-41fd-a6f6-1a4e10418e00",
         "EPSG:28992",
         1000,
         "2018-06-02T06:00:00Z",
@@ -42,7 +42,7 @@ def test_download_waterdepth_raster():
 def test_download_waterdepth_raster_reprojected_bounds():
     bounds = {"east": 115000, "west": 114000, "north": 561000, "south": 560000}
     downloader.download_waterdepth_raster(
-        "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
+        "97458c61-dbcd-41fd-a6f6-1a4e10418e00",
         "EPSG:28992",
         1000,
         "2018-06-02T06:00:00Z",
@@ -56,13 +56,13 @@ def test_download_waterdepth_raster_reprojected_bounds():
 
 
 def test_get_netcdf_link():
-    url = downloader.get_netcdf_link("06c38953-31ec-4f6d-ae1f-ccdf31a348ae")
-    assert url == "https://demo.lizard.net/api/v3/scenario-results/52331/results_3di.nc"
+    url = downloader.get_netcdf_link("97458c61-dbcd-41fd-a6f6-1a4e10418e00")
+    assert url == "https://demo.lizard.net/api/v3/scenario-results/50681/results_3di.nc"
 
 
 def test_download_raw_results():
     downloader.download_raw_results(
-        "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
+        "97458c61-dbcd-41fd-a6f6-1a4e10418e00",
         "threedi_scenario_downloader/tests/testdata/test.nc",
     )
     assert os.path.isfile("threedi_scenario_downloader/tests/testdata/test.nc")
@@ -70,7 +70,7 @@ def test_download_raw_results():
 
 def test_download_grid_administration():
     downloader.download_grid_administration(
-        "06c38953-31ec-4f6d-ae1f-ccdf31a348ae",
+        "97458c61-dbcd-41fd-a6f6-1a4e10418e00",
         "threedi_scenario_downloader/tests/testdata/test.h5",
     )
     assert os.path.isfile("threedi_scenario_downloader/tests/testdata/test.h5")
@@ -82,20 +82,20 @@ def test_clear_inbox():
 
 
 def test_get_attachment_links():
-    scenario = downloader.find_scenarios_by_name("lizardapitest")[0]
+    scenario = downloader.find_scenarios_by_name("exel_firs")[0]
     links = downloader.get_attachment_links(scenario)
     assert links is not None
 
 
 def test_rasters_in_scenario():
-    scenario = downloader.find_scenarios_by_name("lizardapitest")[0]
+    scenario = downloader.find_scenarios_by_name("exel_firs")[0]
     static_rasters, temporal_rasters = downloader.rasters_in_scenario(scenario)
     assert static_rasters is not None and temporal_rasters is not None
 
 
 def test_get_raster_link():
     raster = downloader.get_raster(
-        "06c38953-31ec-4f6d-ae1f-ccdf31a348ae", "depth-max-dtri"
+        "97458c61-dbcd-41fd-a6f6-1a4e10418e00", "depth-max-dtri"
     )
     download_url = downloader.get_raster_link(
         raster, "EPSG:4326", 10, bounds=None, time=None
@@ -136,7 +136,7 @@ def test_get_raster_link():
 
 
 def test_get_raster_timesteps():
-    raster = downloader.get_raster("06c38953-31ec-4f6d-ae1f-ccdf31a348ae", "s1-dtri")
+    raster = downloader.get_raster("97458c61-dbcd-41fd-a6f6-1a4e10418e00", "s1-dtri")
     timesteps = downloader.get_raster_timesteps(raster, interval_hours=None)
     assert isinstance(timesteps, list) and all(
         isinstance(step, str) for step in timesteps
@@ -145,7 +145,7 @@ def test_get_raster_timesteps():
 
 def test_get_raster_from_json():
     scenario = downloader.find_scenarios_by_model_slug(
-        "005a58d09538e4e4cdbe48f2f3f22aeb89330ae4"
+        "71407b2988ea075022d2095c2c942c0f5a7bac6e"
     )[0]
     raster = downloader.get_raster_from_json(scenario, "depth-max-dtri")
     assert raster["uuid"] == "4ef95627-e370-4eba-a5bc-bed661a3101a"
