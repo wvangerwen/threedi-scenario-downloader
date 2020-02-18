@@ -28,7 +28,7 @@ SCENARIO_FILTERS = {
 def set_logging_level(level):
     """set logging level to the supplied level"""
 
-    log.level(level)
+    log.level = level
 
 
 def get_headers():
@@ -187,9 +187,12 @@ def create_raster_task(
 def get_task_status(task_uuid):
     """return status of task"""
     url = "{}tasks/{}/".format(LIZARD_URL, task_uuid)
-    r = requests.get(url=url, headers=get_headers())
-    r.raise_for_status()
-    return r.json()["task_status"]
+    try:
+        r = requests.get(url=url, headers=get_headers())
+        r.raise_for_status()
+        return r.json()["task_status"]
+    except:
+        return "UNKNOWN"
 
 
 def get_task_download_url(task_uuid):
@@ -260,9 +263,17 @@ def download_raster(
     task_uuid = task["task_id"]
 
     log.debug("Start waiting for task {} to finish".format(task_uuid))
-    while get_task_status(task_uuid) == "PENDING":
+
+    task_status = get_task_status(task_uuid)
+    while (
+        task_status == "PENDING"
+        or task_status == "UNKNOWN"
+        or task_status == "STARTED"
+        or task_status == "RETRY"
+    ):
         sleep(5)
         log.debug("Still waiting for task {}".format(task_uuid))
+        task_status = get_task_status(task_uuid)
 
     if get_task_status(task_uuid) == "SUCCESS":
         # task is a succes, return download url
@@ -278,7 +289,7 @@ def download_raster(
         )
         download_task(task_uuid, pathname)
     else:
-        log.debug("Task failed")
+        log.debug("Task failed, status was: {}".format(task_status))
 
 
 def download_maximum_waterdepth_raster(
