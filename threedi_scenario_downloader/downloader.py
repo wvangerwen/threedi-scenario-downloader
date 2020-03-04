@@ -33,13 +33,11 @@ def set_logging_level(level):
 
 def get_headers():
     """return headers"""
-
     return REQUESTS_HEADERS
 
 
 def set_headers(username, password):
     """set Lizard login credentials"""
-
     REQUESTS_HEADERS["username"] = username
     REQUESTS_HEADERS["password"] = password
     REQUESTS_HEADERS["Content-Type"] = "application/json"
@@ -239,57 +237,95 @@ def download_raster(
     bounds_srs=None,
     time=None,
     pathname=None,
-):
+):  
     """
-    download raster
+    Download raster.
+    To download multiple rasters at the same time, simply pass the required input parameters as list. 
+    Scenario and pathname should be of same length.
     """
-    if type(scenario) is str:
-        # assume uuid
-        raster = get_raster(scenario, raster_code)
-    elif type(scenario) is dict:
-        # assume json object
-        raster = get_raster_from_json(scenario, raster_code)
-    else:
-        log.debug("Invalid scenario: supply a json object or uuid string")
+    #If task is called for single raster, prepare list.
+    def transform_to_list(var, length=1):
+        """Transform input to list if for instance only one input is given"""
+        if type(var) is list:
+            return var
+        else:
+            if type(var) is tuple:
+                return list(var)*length
+            else: #type(var) in (str, dict, int, type(None), bool, float):
+                return [var]*length
+                
+    scenario_list = transform_to_list(var=scenario)
+    raster_code_list = transform_to_list(var=raster_code, length=len(scenario_list))
+    target_srs_list = transform_to_list(var=target_srs, length=len(scenario_list))
+    bounds_list = transform_to_list(var=bounds, length=len(scenario_list))
+    bounds_srs_list = transform_to_list(var=bounds_srs, length=len(scenario_list))
+    resolution_list = transform_to_list(var=resolution, length=len(scenario_list))
+    time_list = transform_to_list(var=time, length=len(scenario_list))
+    pathname_list = transform_to_list(var=pathname)
+    processed_list = transform_to_list(var=False, length=len(scenario_list))
+    task_id_list = transform_to_list(var=None, length=len(scenario_list))
+    task_url_list = transform_to_list(var=None, length=len(scenario_list))
+    
+    
+    if len(scenario_list) !=  len(pathname_list):
+        log.debug("Scenarios and output should be of same length")
+        print("Scenarios and output should be of same length")
+        return
 
-    task = create_raster_task(
-        raster,
-        target_srs,
-        resolution=resolution,
-        bounds=bounds,
-        bounds_srs=bounds_srs,
-        time=time,
-    )
-    task_uuid = task["task_id"]
+    #Create tasks
+    for (index, scenario), raster_code, target_srs, bounds, bounds_srs, resolution, time in zip(enumerate(scenario_list), raster_code_list, target_srs_list, bounds_list, bounds_srs_list, resolution_list, time_list):
+        if type(scenario) is str:
+            # assume uuid
+            raster = get_raster(scenario, raster_code)
+        elif type(scenario) is dict:
+            # assume json object
+            raster = get_raster_from_json(scenario, raster_code)
+        else:
+            log.debug("Invalid scenario: supply a json object or uuid string")
 
-    log.debug("Start waiting for task {} to finish".format(task_uuid))
+        task = create_raster_task(
+            raster,
+            target_srs,
+            resolution=resolution,
+            bounds=bounds,
+            bounds_srs=bounds_srs,
+            time=time,
+        )
+        task_id_list[index] = task['task_id']
+        task_url_list[index] = task['url']
+        
+    print("Creating the following rasters:")
+    for (index, task_url), pathname in zip(enumerate(task_url_list), pathname_list):
+        print("{}. {} output: {}".format(index, task_url, pathname.split(os.sep)[-1]))
+        
+    #Check status of task and download
+    while not all(processed_list):
+        for (index, task_uuid), pathname, processed in zip(enumerate(task_id_list), pathname_list, processed_list):
+            if not processed:
+                task_status = get_task_status(task_uuid)
 
-    task_status = get_task_status(task_uuid)
-    while (
-        task_status == "PENDING"
-        or task_status == "UNKNOWN"
-        or task_status == "STARTED"
-        or task_status == "RETRY"
-    ):
+                if task_status == "SUCCESS":
+                    # task is a succes, return download url
+                    log.debug(
+                        "Task succeeded, start downloading url: {}".format(
+                            get_task_download_url(task_uuid)
+                        )
+                    )
+                    print(
+                        "Task succeeded, start downloading url: {}".format(
+                            get_task_download_url(task_uuid)
+                        )
+                    )
+                    print("Remaining tasks: {}".format(processed_list.count(False)-1))
+                    download_task(task_uuid, pathname)
+                    processed_list[index]=True
+                elif task_status in ("PENDING", "UNKNOWN", "STARTED", "RETRY"):
+                    pass
+                else:
+                    log.debug("Task {} failed, status was: {}".format(task_uuid, task_status))
+                    print("Task {} failed, status was: {}".format(task_uuid, task_status))
+                    processed_list[index]=True
         sleep(5)
-        log.debug("Still waiting for task {}".format(task_uuid))
-        task_status = get_task_status(task_uuid)
-
-    if get_task_status(task_uuid) == "SUCCESS":
-        # task is a succes, return download url
-        log.debug(
-            "Task succeeded, start downloading url: {}".format(
-                get_task_download_url(task_uuid)
-            )
-        )
-        print(
-            "Task succeeded, start downloading url: {}".format(
-                get_task_download_url(task_uuid)
-            )
-        )
-        download_task(task_uuid, pathname)
-    else:
-        log.debug("Task failed, status was: {}".format(task_status))
 
 
 def download_maximum_waterdepth_raster(
